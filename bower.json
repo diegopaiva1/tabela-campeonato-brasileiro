@@ -1,0 +1,27 @@
+{
+  "name": "tabela-campeonato-brasileiro",
+  "description": "Aplicação criada com Vuejs 2.0 a partir do curso da School of Net",
+  "main": "main.js",
+  "authors": [
+    "Diego Paiva <diego.paiva13@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Vue",
+    "campeonato",
+    "brasileirao"
+  ],
+  "homepage": "https://github.com/diegopaiva1/tabela-campeonato-brasileiro",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.1.2",
+    "jquery": "^3.3.1"
+  }
+}

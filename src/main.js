@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import { Time } from './time.js'
 
+// Bootstrap 4
+require('../bower_components/bootstrap/dist/css/bootstrap.min.css')
+
 new Vue({
   el: '#app',
   data: {
