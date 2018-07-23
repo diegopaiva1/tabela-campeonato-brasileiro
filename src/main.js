@@ -30,16 +30,43 @@ let app = new Vue({
     jogo: new Jogo(),
   },
   created() {
-    const TOTAL_TIMES = this.times.length;
-    let indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
-    let indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
+    this.sortearTimes();
+  },
+  methods: {
+    sortearTimes() {
+      const TOTAL_TIMES = this.times.length;
+      let indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
+      let indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
 
-    while (indiceTimeCasa == indiceTimeFora) {
-      indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
-      indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
+      while (indiceTimeCasa == indiceTimeFora) {
+        indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
+        indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
+      }
+
+      this.jogo.timeCasa = this.times[indiceTimeCasa];
+      this.jogo.timeFora = this.times[indiceTimeFora];
+    },
+    finalizarPartida(timeCasa, timeFora) {
+      if(timeCasa.golsMarcados == timeFora.golsMarcados) {
+        timeCasa.pontos++;
+        timeFora.pontos++;
+        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
+        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
+      }
+      else if(timeCasa.golsMarcados > timeFora.golsMarcados) {
+        timeCasa.pontos += 3;
+        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
+        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
+      }
+      else if(timeFora.golsMarcados > timeCasa.golsMarcados) {
+        timeFora.pontos += 3;
+        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
+        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
+      }
+      this.sortearTimes();
+    },
+    saldoGols(time) {
+      return time.golsMarcados - time.golsSofridos;
     }
-
-    this.jogo.timeCasa = this.times[indiceTimeCasa];
-    this.jogo.timeFora = this.times[indiceTimeFora];
   }
 })
