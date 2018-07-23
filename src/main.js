@@ -5,6 +5,7 @@ import { Jogo } from './jogo.js'
 let app = new Vue({
   el: '#app',
   data: {
+    colunas: ['#', 'time', 'pontos', 'gm', 'gs', 'Saldo'],
     times: [
       new Time('América-MG', require('./assets/img/escudos/thumb_america-mg.png')),
       new Time('Atlético-MG', require('./assets/img/escudos/thumb_atletico-mg.png')),
@@ -64,9 +65,14 @@ let app = new Vue({
         timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
       }
       this.sortearTimes();
-    },
-    saldoGols(time) {
+    }
+  },
+  filters: {
+    saldo(time) {
       return time.golsMarcados - time.golsSofridos;
+    },
+    capitalizarPrimeiraLetra(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 })
