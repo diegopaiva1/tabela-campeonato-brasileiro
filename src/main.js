@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import { Time } from './time.js'
+import { Jogo } from './jogo.js'
 
-new Vue({
+let app = new Vue({
   el: '#app',
   data: {
     times: [
@@ -25,6 +26,20 @@ new Vue({
       new Time('Sport', require('./assets/img/escudos/thumb_sport.png')),
       new Time('Vasco', require('./assets/img/escudos/thumb_vasco.png')),
       new Time('Vitória', require('./assets/img/escudos/thumb_vitoria.png'))
-    ]
+    ],
+    jogo: new Jogo(),
+  },
+  created() {
+    const TOTAL_TIMES = this.times.length;
+    let indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
+    let indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
+
+    while (indiceTimeCasa == indiceTimeFora) {
+      indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
+      indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
+    }
+
+    this.jogo.timeCasa = this.times[indiceTimeCasa];
+    this.jogo.timeFora = this.times[indiceTimeFora];
   }
 })

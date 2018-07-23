@@ -5,7 +5,14 @@
     <title>Campeonato brasileiro</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
   </head>
-  <style> body { margin-top: 1em } </style>
+  <style>
+    body {
+      margin-top: 1em;
+    }
+    .escudo-jogo {
+      padding: 1em;
+    }
+  </style>
   <body>
     <div id="app" class="container">
       <h2 class="text-center">Campeonato Brasileiro 2018 - Série A</h2>
@@ -31,7 +38,23 @@
           </tr>
         </tbody>
       </table>
-    </div>
+      <form>
+        <div class="form-row align-items-center">
+          <div class="col-sm-1 my-1">
+            <input type="text" class="form-control" placeholder="Gols">
+          </div>
+          <img :src="jogo.timeCasa.escudo" :alt="jogo.timeCasa.nome" class="escudo-jogo">
+          <span> X </span>
+          <img :src="jogo.timeFora.escudo" :alt="jogo.timeFora.nome" class="escudo-jogo">
+          <div class="col-sm-1 my-1">
+              <input type="text" class="form-control" placeholder="Gols">
+          </div>
+          <div class="col-auto my-1">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+          </div>
+        </div>
+      </form>
+     </div>
     <script src="/dist/build.js"></script>
   </body>
 </html>
