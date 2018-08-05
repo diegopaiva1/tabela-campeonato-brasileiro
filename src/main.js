@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import { Time } from './time.js'
 import { Jogo } from './jogo.js'
+import _ from 'lodash'
 
 let app = new Vue({
   el: '#app',
   data: {
-    colunas: ['#', 'time', 'pontos', 'gm', 'gs', 'Saldo'],
+    colunas: ['#', 'time', 'pontos', 'golsMarcados', 'golsSofridos', 'Saldo'],
+    colunasOrdenaveis: ['pontos', 'golsMarcados', 'golsSofridos'],
+    parametrosOrdenaveis: {
+      chaves: ['pontos', 'golsMarcados', 'golsSofridos'],
+      valores: ['desc', 'desc', 'asc']
+    },
     times: [
       new Time('América-MG', require('./assets/img/escudos/thumb_america-mg.png')),
       new Time('Atlético-MG', require('./assets/img/escudos/thumb_atletico-mg.png')),
@@ -48,28 +54,55 @@ let app = new Vue({
       this.jogo.timeCasa = this.times[indiceTimeCasa];
       this.jogo.timeFora = this.times[indiceTimeFora];
     },
-    finalizarPartida(timeCasa, timeFora) {
-      if(timeCasa.golsMarcados == timeFora.golsMarcados) {
+    finalizarPartida() {
+      let timeCasa = this.jogo.timeCasa;
+      let timeFora = this.jogo.timeFora;
+
+      timeCasa.golsMarcados += parseInt(this.jogo.golsTimeCasa);
+      timeFora.golsMarcados += parseInt(this.jogo.golsTimeFora);
+      timeCasa.golsSofridos += parseInt(this.jogo.golsTimeFora);
+      timeFora.golsSofridos += parseInt(this.jogo.golsTimeCasa);
+
+      if(this.jogo.golsTimeCasa == this.jogo.golsTimeFora) {
         timeCasa.pontos++;
         timeFora.pontos++;
-        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
-        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
       }
-      else if(timeCasa.golsMarcados > timeFora.golsMarcados) {
+      else if(this.jogo.golsTimeCasa > this.jogo.golsTimeFora) {
         timeCasa.pontos += 3;
-        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
-        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
       }
-      else if(timeFora.golsMarcados > timeCasa.golsMarcados) {
+      else if(this.jogo.golsTimeFora > this.jogo.golsTimeCasa) {
         timeFora.pontos += 3;
-        timeCasa.golsSofridos += parseInt(timeFora.golsMarcados);
-        timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
       }
+      // Zerando o placar para o próximo jogo
+      this.jogo.golsTimeCasa = 0;
+      this.jogo.golsTimeFora = 0;
+
       this.sortearTimes();
       this.setView('tabela');
     },
+    ehOrdenavel(coluna) {
+      for (var i = 0; i < this.colunasOrdenaveis.length; i++) {
+        if(this.colunasOrdenaveis[i] == coluna) {
+          return true;
+        }
+      }
+      return false;
+    },
     setView(view) {
+      if(view == 'novoJogo') {
+        this.sortearTimes();
+      }
       this.view = view;
+    },
+    order(titulo) {
+      this.parametrosOrdenaveis.chaves = titulo;
+      this.parametrosOrdenaveis.valores = this.parametrosOrdenaveis.valores == 'desc' ? 'asc' : 'desc';
+    }
+  },
+  computed: {
+    timesOrdenados() {
+      // Lodash orderBy: coleção, chaves e critério
+      return _.orderBy(this.times, this.parametrosOrdenaveis.chaves, this.parametrosOrdenaveis.valores);
     }
   },
   filters: {
@@ -78,6 +111,9 @@ let app = new Vue({
     },
     capitalizarPrimeiraLetra(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    addSpaceBetweenWordsInCamelCaseFormat(word) {
+      // TODO
     }
   }
 })

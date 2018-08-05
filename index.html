@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Campeonato brasileiro</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/components-font-awesome/css/fontawesome-all.min.css">
   </head>
   <style>
     body {
@@ -25,12 +26,13 @@
           <thead>
             <tr>
               <th scope="col" v-for="(titulo, index) in colunas" :class="{ 'text-center': index == 0 }">
+                <a href="#" @click.prevent="order(titulo)"><i class="fa fa-fw fa-sort" v-show="ehOrdenavel(titulo)"></i></a>
                 {{ titulo | capitalizarPrimeiraLetra }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(time, index) in times">
+            <tr v-for="(time, index) in timesOrdenados" :class="{ 'table-success': index < 4, 'table-danger': index > 15 }">
               <td class="text-center"><strong>{{ index + 1 }}</strong></td>
               <td><img :src="time.escudo" alt="time.nome"> {{ time.nome }}</td>
               <td>{{ time.pontos }}</td>
@@ -44,19 +46,19 @@
       <div class="formulario-jogo" v-show="view == 'novoJogo'">
         <div class="form-row align-items-center">
           <div class="col-sm-1 my-1">
-            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeCasa.golsMarcados"
-            @keyup.enter="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.golsTimeCasa"
+            @keyup.enter="finalizarPartida()">
           </div>
           <img :src="jogo.timeCasa.escudo" :alt="jogo.timeCasa.nome" class="escudo-jogo">
           <span> X </span>
           <img :src="jogo.timeFora.escudo" :alt="jogo.timeFora.nome" class="escudo-jogo">
           <div class="col-sm-1 my-1">
-            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeFora.golsMarcados"
-            @keyup.enter="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.golsTimeFora"
+            @keyup.enter="finalizarPartida()">
           </div>
           <div class="col-auto my-1">
             <button type="submit" class="btn btn-primary"
-            @click="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+            @click="finalizarPartida()">
               Registrar
             </button>
           </div>
