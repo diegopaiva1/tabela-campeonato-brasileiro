@@ -1,0 +1,31 @@
+ body {
+  margin-top: 1em;
+  background: url('../img/ball.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.escudo-jogo {
+  padding: 1em;
+}
+
+#btn-new-game {
+  margin-bottom: 1em;
+}
+
+.tabela-campeonato > table {
+  background-color: #fff;
+}
+
+#title {
+  font-family: 'Merriweather', serif;
+  font-weight: bold;
+}
+
+.return {
+  margin-bottom: 1em;
+}
+
+.return > a {
+  text-decoration: none;
+}

@@ -5,5 +5,6 @@ export class Time {
     this.pontos = 0;
     this.golsSofridos = 0;
     this.golsMarcados = 0;
+    this.saldo = 0;
   }
 }

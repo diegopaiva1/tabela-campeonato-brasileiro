@@ -1,18 +1,27 @@
+// Classes
 import Vue from 'vue'
 import { Time } from './time.js'
 import { Jogo } from './jogo.js'
 import _ from 'lodash'
 
+// Components
+import PageHeader from './components/PageHeader.vue'
+import SearchBar from './components/SearchBar.vue'
+
 let app = new Vue({
   el: '#app',
+  components: {
+    PageHeader,
+    SearchBar
+  },
   data: {
-    colunas: ['#', 'time', 'pontos', 'golsMarcados', 'golsSofridos', 'Saldo'],
-    colunasOrdenaveis: ['pontos', 'golsMarcados', 'golsSofridos'],
+    columns: ['#', 'time', 'pontos', 'golsMarcados', 'golsSofridos', 'Saldo'],
+    sortableColumns: ['pontos', 'golsMarcados', 'golsSofridos', 'Saldo'],
     parametrosOrdenaveis: {
-      chaves: ['pontos', 'golsMarcados', 'golsSofridos'],
-      valores: ['desc', 'desc', 'asc']
+      chaves: ['pontos', 'golsMarcados', 'golsSofridos', 'saldo'],
+      valores: ['desc', 'desc', 'asc', 'desc']
     },
-    timePesquisado: '',
+    searchableInput: '',
     times: [
       new Time('América-MG', require('./assets/img/escudos/thumb_america-mg.png')),
       new Time('Atlético-MG', require('./assets/img/escudos/thumb_atletico-mg.png')),
@@ -39,10 +48,12 @@ let app = new Vue({
     view: 'tabela'
   },
   created() {
-    this.sortearTimes();
+    // Lodash orderBy: coleção, chaves e critério
+    this.times =  _.orderBy(this.times, this.parametrosOrdenaveis.chaves, this.parametrosOrdenaveis.valores);
+    this.drawTeamsForGame();
   },
   methods: {
-    sortearTimes() {
+    drawTeamsForGame() {
       const TOTAL_TIMES = this.times.length;
       let indiceTimeCasa = Math.floor(Math.random() * TOTAL_TIMES);
       let indiceTimeFora = Math.floor(Math.random() * TOTAL_TIMES);
@@ -78,12 +89,12 @@ let app = new Vue({
       this.jogo.golsTimeCasa = 0;
       this.jogo.golsTimeFora = 0;
 
-      this.sortearTimes();
+      this.drawTeamsForGame();
       this.setView('tabela');
     },
     ehOrdenavel(coluna) {
-      for (var i = 0; i < this.colunasOrdenaveis.length; i++) {
-        if(this.colunasOrdenaveis[i] == coluna) {
+      for (var i = 0; i < this.sortableColumns.length; i++) {
+        if(this.sortableColumns[i] == coluna) {
           return true;
         }
       }
@@ -91,29 +102,27 @@ let app = new Vue({
     },
     setView(view) {
       if(view == 'novoJogo') {
-        this.sortearTimes();
+        this.drawTeamsForGame();
       }
       this.view = view;
     },
     order(titulo) {
       this.parametrosOrdenaveis.chaves = titulo;
       this.parametrosOrdenaveis.valores = this.parametrosOrdenaveis.valores == 'desc' ? 'asc' : 'desc';
-    }
+    },
+    setSearchableInput(input) {
+      this.searchableInput = input;
+    },
   },
   computed: {
-    timesOrdenados() {
-      // Lodash orderBy: coleção, chaves e critério
-      let times =  _.orderBy(this.times, this.parametrosOrdenaveis.chaves, this.parametrosOrdenaveis.valores);
+    sortedTeams() {
       // Lodash filter: coleção e regra do filtro - Método da barra de pesquisa
-      return _.filter(times, item => {
-        return item.nome.toLowerCase().indexOf(this.timePesquisado.toLowerCase()) >= 0;
-      });
+      return _.filter(this.times, time => {
+                return time.nome.toLowerCase().indexOf(this.searchableInput.toLowerCase()) >= 0;
+              });
     }
   },
   filters: {
-    saldo(time) {
-      return time.golsMarcados - time.golsSofridos;
-    },
     capitalizarPrimeiraLetra(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
