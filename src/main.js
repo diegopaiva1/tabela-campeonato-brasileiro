@@ -12,6 +12,7 @@ let app = new Vue({
       chaves: ['pontos', 'golsMarcados', 'golsSofridos'],
       valores: ['desc', 'desc', 'asc']
     },
+    timePesquisado: '',
     times: [
       new Time('América-MG', require('./assets/img/escudos/thumb_america-mg.png')),
       new Time('Atlético-MG', require('./assets/img/escudos/thumb_atletico-mg.png')),
@@ -102,7 +103,11 @@ let app = new Vue({
   computed: {
     timesOrdenados() {
       // Lodash orderBy: coleção, chaves e critério
-      return _.orderBy(this.times, this.parametrosOrdenaveis.chaves, this.parametrosOrdenaveis.valores);
+      let times =  _.orderBy(this.times, this.parametrosOrdenaveis.chaves, this.parametrosOrdenaveis.valores);
+      // Lodash filter: coleção e regra do filtro - Método da barra de pesquisa
+      return _.filter(times, item => {
+        return item.nome.toLowerCase().indexOf(this.timePesquisado.toLowerCase()) >= 0;
+      });
     }
   },
   filters: {
