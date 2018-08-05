@@ -12,44 +12,54 @@
     .escudo-jogo {
       padding: 1em;
     }
+    #btn-novo-jogo {
+      margin-bottom: 1em;
+    }
   </style>
   <body>
     <div id="app" class="container">
       <h2 class="text-center">Campeonato Brasileiro 2018 - Série A</h2>
-      <table class="table table-striped table-bordered table-hover">
-        <thead>
-          <tr>
-            <th scope="col" v-for="(titulo, index) in colunas" :class="{ 'text-center': index == 0 }">
-              {{ titulo | capitalizarPrimeiraLetra }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(time, index) in times">
-            <td class="text-center"><strong>{{ index + 1 }}</strong></td>
-            <td><img :src="time.escudo" alt="time.nome"> {{ time.nome }}</td>
-            <td>{{ time.pontos }}</td>
-            <td>{{ time.golsMarcados }}</td>
-            <td>{{ time.golsSofridos }}</td>
-            <td>{{ time | saldo }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="form-row align-items-center">
-        <div class="col-sm-1 my-1">
-          <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeCasa.golsMarcados">
-        </div>
-        <img :src="jogo.timeCasa.escudo" :alt="jogo.timeCasa.nome" class="escudo-jogo">
-        <span> X </span>
-        <img :src="jogo.timeFora.escudo" :alt="jogo.timeFora.nome" class="escudo-jogo">
-        <div class="col-sm-1 my-1">
-          <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeFora.golsMarcados">
-        </div>
-        <div class="col-auto my-1">
-          <button type="submit" class="btn btn-primary"
-          @click="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
-            Registrar
-          </button>
+      <button class="btn btn-primary" id="btn-novo-jogo" @click="setView('novoJogo')">Novo jogo</button>
+      <div class="tabela-campeonato" v-show="view == 'tabela'">
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col" v-for="(titulo, index) in colunas" :class="{ 'text-center': index == 0 }">
+                {{ titulo | capitalizarPrimeiraLetra }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(time, index) in times">
+              <td class="text-center"><strong>{{ index + 1 }}</strong></td>
+              <td><img :src="time.escudo" alt="time.nome"> {{ time.nome }}</td>
+              <td>{{ time.pontos }}</td>
+              <td>{{ time.golsMarcados }}</td>
+              <td>{{ time.golsSofridos }}</td>
+              <td>{{ time | saldo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formulario-jogo" v-show="view == 'novoJogo'">
+        <div class="form-row align-items-center">
+          <div class="col-sm-1 my-1">
+            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeCasa.golsMarcados"
+            @keyup.enter="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+          </div>
+          <img :src="jogo.timeCasa.escudo" :alt="jogo.timeCasa.nome" class="escudo-jogo">
+          <span> X </span>
+          <img :src="jogo.timeFora.escudo" :alt="jogo.timeFora.nome" class="escudo-jogo">
+          <div class="col-sm-1 my-1">
+            <input type="text" class="form-control" placeholder="Gols" v-model="jogo.timeFora.golsMarcados"
+            @keyup.enter="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+          </div>
+          <div class="col-auto my-1">
+            <button type="submit" class="btn btn-primary"
+            @click="finalizarPartida(jogo.timeCasa, jogo.timeFora)">
+              Registrar
+            </button>
+          </div>
         </div>
       </div>
      </div>

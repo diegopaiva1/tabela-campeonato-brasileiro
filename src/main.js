@@ -29,6 +29,7 @@ let app = new Vue({
       new Time('Vitória', require('./assets/img/escudos/thumb_vitoria.png'))
     ],
     jogo: new Jogo(),
+    view: 'tabela'
   },
   created() {
     this.sortearTimes();
@@ -65,6 +66,10 @@ let app = new Vue({
         timeFora.golsSofridos += parseInt(timeCasa.golsMarcados);
       }
       this.sortearTimes();
+      this.setView('tabela');
+    },
+    setView(view) {
+      this.view = view;
     }
   },
   filters: {
